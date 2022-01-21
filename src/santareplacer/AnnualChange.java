@@ -2,6 +2,8 @@ package santareplacer;
 
 import children.Child;
 import gifts.Gift;
+import enums.CityStrategyEnum;
+import enums.ElvesType;
 
 import java.util.List;
 
@@ -10,6 +12,7 @@ public final class AnnualChange {
     private List<Gift> newGifts;
     private List<Child> newChildren;
     private List<ChildUpdate> childrenUpdates;
+    private CityStrategyEnum strategy;
 
     public Double getNewSantaBudget() {
         return newSantaBudget;
@@ -41,5 +44,13 @@ public final class AnnualChange {
 
     public void setChildrenUpdates(final List<ChildUpdate> childrenUpdates) {
         this.childrenUpdates = childrenUpdates;
+    }
+
+    public CityStrategyEnum getStrategy() {
+        return strategy;
+    }
+
+    public void setStrategy(CityStrategyEnum strategy) {
+        this.strategy = strategy;
     }
 }

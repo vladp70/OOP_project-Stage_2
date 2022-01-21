@@ -1,6 +1,7 @@
 package santareplacer;
 
 import enums.Category;
+import enums.ElvesType;
 
 import java.util.List;
 
@@ -8,6 +9,7 @@ public final class ChildUpdate {
     private Integer id;
     private Double niceScore;
     private List<Category> giftsPreferences;
+    private ElvesType elf;
 
     public Integer getId() {
         return id;
@@ -31,5 +33,13 @@ public final class ChildUpdate {
 
     public void setGiftsPreferences(final List<Category> giftsPreferences) {
         this.giftsPreferences = giftsPreferences;
+    }
+
+    public ElvesType getElf() {
+        return elf;
+    }
+
+    public void setElf(ElvesType elf) {
+        this.elf = elf;
     }
 }

@@ -3,6 +3,7 @@ package children;
 import enums.AgeGroup;
 import enums.Category;
 import enums.Cities;
+import enums.ElvesType;
 import gifts.Gift;
 import utils.Utils;
 
@@ -23,6 +24,8 @@ public final class Child implements Comparable<Child> {
     private List<Gift> receivedGifts = new ArrayList<>();
     private AgeGroup ageGroup = AgeGroup.UNKNOWN;
     private AverageScoreStrategy averageScoreStrategy = null;
+    private Double niceScoreBonus = 0.0;
+    private ElvesType elf;
 
     public Integer getId() {
         return id;
@@ -96,6 +99,22 @@ public final class Child implements Comparable<Child> {
         return receivedGifts;
     }
 
+    public Double getNiceScoreBonus() {
+        return niceScoreBonus;
+    }
+
+    public void setNiceScoreBonus(Double niceScoreBonus) {
+        this.niceScoreBonus = niceScoreBonus;
+    }
+
+    public ElvesType getElf() {
+        return elf;
+    }
+
+    public void setElf(ElvesType elf) {
+        this.elf = elf;
+    }
+
     public void receiveGift(final Gift receivedGift) {
         if (receivedGift != null) {
             this.receivedGifts.add(receivedGift);
@@ -121,6 +140,10 @@ public final class Child implements Comparable<Child> {
 
     public Double getAverageScore() {
         averageScore = averageScoreStrategy.getAverageScore(this);
+        averageScore += averageScore * niceScoreBonus / 100;
+        if (averageScore > 10.0) {
+            averageScore = 10.0;
+        }
         return averageScore;
     }
 
