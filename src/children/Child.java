@@ -149,6 +149,10 @@ public final class Child implements Comparable<Child>, Visitable {
         return averageScore;
     }
 
+    public Double getAverageScoreWithoutUpdate() {
+        return averageScore;
+    }
+
     public void initAgeGroup() {
         if (ageGroup == AgeGroup.UNKNOWN) {
             ageGroup = Utils.ageToAgeGroup(age);

@@ -23,7 +23,8 @@ public final class Database {
     private List<Gift> gifts;
     private List<AnnualChange> annualChanges;
     private Double budgetUnit;
-    private CityStrategyEnum strategy = CityStrategyEnum.ID;
+    private CityStrategyEnum strategy = null;
+    private GiftingStrategy giftingStrategy = null;
     private Map<Child, Double> childrenBudgets = new HashMap<>();
 
     private Database() { }
@@ -59,6 +60,10 @@ public final class Database {
         return budgetUnit;
     }
 
+    public Map<Child, Double> getChildrenBudgets() {
+        return childrenBudgets;
+    }
+
     /**
      * Copies the input data to this database object and initializes the children in the database
      * @param input that contains the initial state of the Santa database
@@ -73,7 +78,7 @@ public final class Database {
         gifts = input.getInitialData().getSantaGiftsList();
         annualChanges = input.getAnnualChanges();
         initChildrenList(children);
-        //TODO init strategy as ID
+        setStrategy(CityStrategyEnum.ID);
     }
 
     public void initChildren(final List<Child> childrenList) {
@@ -88,6 +93,13 @@ public final class Database {
         initChildren(childrenList);
         removeAdults();
         Collections.sort(childrenList);
+    }
+
+    public void setStrategy(CityStrategyEnum newStrategy) {
+        strategy = newStrategy;
+        giftingStrategy = GiftingStrategyFactory
+                .getInstance()
+                .createStrategy(strategy);
     }
 
     public void incrementAges() {
@@ -214,8 +226,9 @@ public final class Database {
     /**
      * Simulates the children growing up, resets their received gifts,
      * adds new data and initializes it, removes adults, sorts lists,
-     * then implements children updates by finding the child in the database,
-     * adding the new nice score (if existing) and adds their new preferences
+     * updates gifting strategy then implements children updates by
+     * finding the child in the database, adding the new nice score
+     * (if existing) and adds their new preferences
      * @param changes to be implemented this year/round
      */
     public void implementAnnualChange(final AnnualChange changes) {
@@ -227,8 +240,7 @@ public final class Database {
         Collections.sort(children);
         gifts.addAll(changes.getNewGifts());
         santaBudget = changes.getNewSantaBudget();
-        strategy = changes.getStrategy();
-        //TODO update strategy
+        setStrategy(changes.getStrategy());
 
         for (var update : changes.getChildrenUpdates()) {
             Child updatedChild = findChildByID(update.getId());
@@ -240,6 +252,7 @@ public final class Database {
                 updatedChild.addNiceScore(update.getNiceScore());
             }
             updatedChild.addPreferences(update.getGiftsPreferences());
+            updatedChild.setElf(update.getElf());
         }
     }
 
@@ -255,20 +268,21 @@ public final class Database {
 
         if (round > numberOfYears || round < 0) {
             return report;
-        } else if (round != 0) {
+        } else if (round == 0) {
+            setStrategy(CityStrategyEnum.ID);
+        } else {
             implementAnnualChange(annualChanges.get(round - 1));
         }
 
         //Calculate budgets
         calculateChildrenBudgets();
 
-        //Assign gifts
-        for (var child : children) {
-            assignGiftsToChild(child, childrenBudgets.get(child));
-        }
+        //Apply gifting strategy and assign gifts
+        giftingStrategy.apply(this);
 
         //Apply yellow elf and create annual report
         var yellowElf = new YellowElf(this);
+        Collections.sort(children);
         for (var child : children) {
             child.accept(yellowElf);
             report.add(new AnnualChildReport(child, childrenBudgets.get(child)));
