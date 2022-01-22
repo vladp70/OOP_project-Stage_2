@@ -1,9 +1,8 @@
-package santareplacer;
+package fileinput;
 
 import children.Child;
 import gifts.Gift;
 import enums.CityStrategyEnum;
-import enums.ElvesType;
 
 import java.util.List;
 

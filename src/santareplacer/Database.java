@@ -8,6 +8,7 @@ import elves.YellowElf;
 import enums.AgeGroup;
 import enums.Category;
 import enums.CityStrategyEnum;
+import fileinput.AnnualChange;
 import fileoutput.AnnualChildReport;
 import fileinput.Input;
 import gifts.Gift;
@@ -72,6 +73,7 @@ public final class Database {
         gifts = input.getInitialData().getSantaGiftsList();
         annualChanges = input.getAnnualChanges();
         initChildrenList(children);
+        //TODO init strategy as ID
     }
 
     public void initChildren(final List<Child> childrenList) {
@@ -178,6 +180,8 @@ public final class Database {
     }
 
     public void calculateChildrenBudgets() {
+        childrenBudgets.clear();
+
         var whiteElf = new WhiteElf(this);
         var blackElf = new BlackElf(this);
         var pinkElf = new PinkElf(this);
@@ -224,6 +228,7 @@ public final class Database {
         gifts.addAll(changes.getNewGifts());
         santaBudget = changes.getNewSantaBudget();
         strategy = changes.getStrategy();
+        //TODO update strategy
 
         for (var update : changes.getChildrenUpdates()) {
             Child updatedChild = findChildByID(update.getId());
@@ -255,7 +260,6 @@ public final class Database {
         }
 
         //Calculate budgets
-        childrenBudgets.clear();
         calculateChildrenBudgets();
 
         //Assign gifts

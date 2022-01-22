@@ -1,7 +1,5 @@
 package fileinput;
 
-import santareplacer.AnnualChange;
-
 import java.util.List;
 
 public final class Input {

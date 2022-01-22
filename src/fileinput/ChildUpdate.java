@@ -1,4 +1,4 @@
-package santareplacer;
+package fileinput;
 
 import enums.Category;
 import enums.ElvesType;
