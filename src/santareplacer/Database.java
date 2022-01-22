@@ -1,15 +1,18 @@
 package santareplacer;
 
 import children.Child;
+import elves.BlackElf;
+import elves.PinkElf;
+import elves.WhiteElf;
+import elves.YellowElf;
 import enums.AgeGroup;
 import enums.Category;
+import enums.CityStrategyEnum;
 import fileio.AnnualChildReport;
 import fileio.Input;
 import gifts.Gift;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public final class Database {
     private static Database instance = null;
@@ -19,6 +22,8 @@ public final class Database {
     private List<Gift> gifts;
     private List<AnnualChange> annualChanges;
     private Double budgetUnit;
+    private CityStrategyEnum strategy = CityStrategyEnum.ID;
+    private Map<Child, Double> childrenBudgets = new HashMap<>();
 
     private Database() { }
 
@@ -47,6 +52,10 @@ public final class Database {
 
     public List<AnnualChange> getAnnualChanges() {
         return annualChanges;
+    }
+
+    public Double getBudgetUnit() {
+        return budgetUnit;
     }
 
     /**
@@ -99,6 +108,28 @@ public final class Database {
         budgetUnit = santaBudget / averageSum;
     }
 
+    //TODO use boolean inStock
+    public Gift findCheapestInStockGiftByCategory(final Category category) {
+        if (category == null) {
+            return null;
+        }
+
+        Gift cheapestGift = null;
+
+        for (var gift : gifts) {
+            if (gift.getCategory().equals(category)
+                    && gift.getQuantity() > 0) {
+                if (cheapestGift == null) {
+                    cheapestGift = gift;
+                } else if (cheapestGift.getPrice() > gift.getPrice()) {
+                    cheapestGift = gift;
+                }
+            }
+        }
+
+        return cheapestGift;
+    }
+
     public Gift findCheapestGiftByCategory(final Category category) {
         if (category == null) {
             return null;
@@ -119,25 +150,22 @@ public final class Database {
         return cheapestGift;
     }
 
-    public AnnualChildReport assignGiftsToChild(final Child child) {
-        Double childBudget = budgetUnit * child.getAverageScore();
-
+    public void assignGiftsToChild(final Child child, Double childBudget) {
         for (var preference : child.getGiftsPreferences()) {
             if (childBudget <= 0.0) {
-                break;
+                return;
             }
 
-            Gift gift = findCheapestGiftByCategory(preference);
+            Gift gift = findCheapestInStockGiftByCategory(preference);
             if (gift == null) {
                 continue;
             }
             if (childBudget >= gift.getPrice()) {
                 childBudget -= gift.getPrice();
                 child.receiveGift(gift);
+                gift.decQuantity();
             }
         }
-
-        return new AnnualChildReport(child, budgetUnit * child.getAverageScore());
     }
 
     public Child findChildByID(final int id) {
@@ -147,6 +175,36 @@ public final class Database {
             }
         }
         return null;
+    }
+
+    public void calculateChildrenBudgets() {
+        var whiteElf = new WhiteElf(this);
+        var blackElf = new BlackElf(this);
+        var pinkElf = new PinkElf(this);
+        Double childBudget = null;
+
+        calculateBudgetUnit();
+        for (var child : children) {
+            childBudget = whiteElf.visit(child);
+            if (childBudget != null) {
+                childrenBudgets.put(child, childBudget);
+                continue;
+            }
+
+            childBudget = pinkElf.visit(child);
+            if (childBudget != null) {
+                childrenBudgets.put(child, childBudget);
+                continue;
+            }
+
+            childBudget = blackElf.visit(child);
+            if (childBudget != null) {
+                childrenBudgets.put(child, childBudget);
+                continue;
+            }
+
+            childrenBudgets.put(child, budgetUnit * child.getAverageScore());
+        }
     }
 
     /**
@@ -165,6 +223,7 @@ public final class Database {
         Collections.sort(children);
         gifts.addAll(changes.getNewGifts());
         santaBudget = changes.getNewSantaBudget();
+        strategy = changes.getStrategy();
 
         for (var update : changes.getChildrenUpdates()) {
             Child updatedChild = findChildByID(update.getId());
@@ -195,9 +254,20 @@ public final class Database {
             implementAnnualChange(annualChanges.get(round - 1));
         }
 
-        calculateBudgetUnit();
+        //Calculate budgets
+        childrenBudgets.clear();
+        calculateChildrenBudgets();
+
+        //Assign gifts
         for (var child : children) {
-            report.add(assignGiftsToChild(child));
+            assignGiftsToChild(child, childrenBudgets.get(child));
+        }
+
+        //Apply yellow elf and create annual report
+        var yellowElf = new YellowElf(this);
+        for (var child : children) {
+            child.accept(yellowElf);
+            report.add(new AnnualChildReport(child, childrenBudgets.get(child)));
         }
 
         return report;

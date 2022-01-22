@@ -43,6 +43,7 @@ public final class Main {
             }
         }
 
+        //TODO use streams
         for (File file : Objects.requireNonNull(directory.listFiles())) {
             String testNumber = file.getName().replaceAll("[^0-9]", "");
             String filepath = Constants.OUTPUT_PATH + testNumber

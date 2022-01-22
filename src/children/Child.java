@@ -1,5 +1,6 @@
 package children;
 
+import elves.ChildVisitor;
 import enums.AgeGroup;
 import enums.Category;
 import enums.Cities;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public final class Child implements Comparable<Child> {
+public final class Child implements Comparable<Child>, Visitable {
     private Integer id;
     private String lastName;
     private String firstName;
@@ -24,6 +25,7 @@ public final class Child implements Comparable<Child> {
     private List<Gift> receivedGifts = new ArrayList<>();
     private AgeGroup ageGroup = AgeGroup.UNKNOWN;
     private AverageScoreStrategy averageScoreStrategy = null;
+    //TODO use builder for niceScoreBonus
     private Double niceScoreBonus = 0.0;
     private ElvesType elf;
 
@@ -211,5 +213,10 @@ public final class Child implements Comparable<Child> {
     @Override
     public int compareTo(final Child o) {
         return this.id.compareTo(o.getId());
+    }
+
+    @Override
+    public Double accept(ChildVisitor visitor) {
+        return visitor.visit(this);
     }
 }

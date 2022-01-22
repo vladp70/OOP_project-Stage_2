@@ -40,6 +40,10 @@ public final class Gift {
         this.quantity = quantity;
     }
 
+    public void decQuantity() {
+        quantity--;
+    }
+
     @Override
     public String toString() {
         return productName + '(' + price + ", " + category + ')';
