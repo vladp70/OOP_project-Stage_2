@@ -3,8 +3,8 @@ package main;
 import checker.Checker;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.Constants;
-import fileio.Input;
-import fileio.Output;
+import fileinput.Input;
+import fileoutput.Output;
 import santareplacer.Database;
 
 import java.io.File;

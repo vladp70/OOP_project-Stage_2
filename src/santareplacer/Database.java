@@ -8,8 +8,8 @@ import elves.YellowElf;
 import enums.AgeGroup;
 import enums.Category;
 import enums.CityStrategyEnum;
-import fileio.AnnualChildReport;
-import fileio.Input;
+import fileoutput.AnnualChildReport;
+import fileinput.Input;
 import gifts.Gift;
 
 import java.util.*;
@@ -181,7 +181,7 @@ public final class Database {
         var whiteElf = new WhiteElf(this);
         var blackElf = new BlackElf(this);
         var pinkElf = new PinkElf(this);
-        Double childBudget = null;
+        Double childBudget;
 
         calculateBudgetUnit();
         for (var child : children) {

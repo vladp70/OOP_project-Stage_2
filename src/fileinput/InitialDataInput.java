@@ -1,4 +1,4 @@
-package fileio;
+package fileinput;
 
 import children.Child;
 import gifts.Gift;

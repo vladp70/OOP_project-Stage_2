@@ -1,4 +1,4 @@
-package fileio;
+package fileoutput;
 
 import children.Child;
 import enums.Category;
@@ -18,7 +18,7 @@ public final class AnnualChildReport {
     private Double averageScore;
     private List<Double> niceScoreHistory;
     private Double assignedBudget;
-    private List<Gift> receivedGifts;
+    private List<GiftDataOutput> receivedGifts;
 
     /**
      * Creates the report based on a semi-deep copy of the child data and the budget.
@@ -36,7 +36,10 @@ public final class AnnualChildReport {
         this.giftsPreferences = new ArrayList<>(child.getGiftsPreferences());
         this.averageScore = child.getAverageScore();
         this.niceScoreHistory = new ArrayList<>(child.getNiceScoreHistory());
-        this.receivedGifts = new ArrayList<>(child.getReceivedGifts());
+        this.receivedGifts = new ArrayList<>();
+        for (var gift : child.getReceivedGifts()) {
+            receivedGifts.add(new GiftDataOutput(gift));
+        }
         this.assignedBudget = assignedBudget;
     }
 
@@ -76,7 +79,7 @@ public final class AnnualChildReport {
         return assignedBudget;
     }
 
-    public List<Gift> getReceivedGifts() {
+    public List<GiftDataOutput> getReceivedGifts() {
         return receivedGifts;
     }
 }

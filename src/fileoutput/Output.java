@@ -1,4 +1,4 @@
-package fileio;
+package fileoutput;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

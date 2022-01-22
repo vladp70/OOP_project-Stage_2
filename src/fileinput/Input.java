@@ -1,4 +1,4 @@
-package fileio;
+package fileinput;
 
 import santareplacer.AnnualChange;
 
