@@ -49,7 +49,7 @@ public final class AnnualChange {
         return strategy;
     }
 
-    public void setStrategy(CityStrategyEnum strategy) {
+    public void setStrategy(final CityStrategyEnum strategy) {
         this.strategy = strategy;
     }
 }

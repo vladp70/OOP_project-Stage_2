@@ -8,9 +8,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NiceScoreCityGiftingStrategy implements GiftingStrategy{
+public final class NiceScoreCityGiftingStrategy implements GiftingStrategy {
     @Override
-    public void apply(Database santaDB) {
+    public void apply(final Database santaDB) {
         Map<Cities, Double> cityAverages = new HashMap<>();
         Double average;
         int numChildrenInCity;
@@ -31,7 +31,7 @@ public class NiceScoreCityGiftingStrategy implements GiftingStrategy{
 
         Collections.sort(santaDB.getChildren(), new Comparator<Child>() {
             @Override
-            public int compare(Child o1, Child o2) {
+            public int compare(final Child o1, final Child o2) {
                 Cities city1 = o1.getCity();
                 Cities city2 = o2.getCity();
                 if (cityAverages.get(city1).equals(cityAverages.get(city2))) {

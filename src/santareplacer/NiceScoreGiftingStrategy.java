@@ -5,12 +5,12 @@ import children.Child;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class NiceScoreGiftingStrategy implements GiftingStrategy{
+public final class NiceScoreGiftingStrategy implements GiftingStrategy {
     @Override
-    public void apply(Database santaDB) {
+    public void apply(final Database santaDB) {
         Collections.sort(santaDB.getChildren(), new Comparator<Child>() {
             @Override
-            public int compare(Child o1, Child o2) {
+            public int compare(final Child o1, final Child o2) {
                 Double niceScore1 = o1.getAverageScore();
                 Double niceScore2 = o2.getAverageScore();
                 if (niceScore1.equals(niceScore2)) {

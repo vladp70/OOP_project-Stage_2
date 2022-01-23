@@ -1,25 +1,25 @@
 package elves;
 
 import children.Child;
+import common.Constants;
 import enums.ElvesType;
-import fileio.AnnualChildReport;
 import santareplacer.Database;
 
-public class BlackElf implements ChildVisitor{
+public final class BlackElf implements ChildVisitor {
     private Database santaDB;
 
-    public BlackElf(Database santaDB) {
+    public BlackElf(final Database santaDB) {
         this.santaDB = santaDB;
     }
 
     @Override
-    public Double visit(Child child) {
+    public Double visit(final Child child) {
         if (!(child.getElf().equals(ElvesType.BLACK))) {
             return null;
         }
 
         Double budget = santaDB.getBudgetUnit() * child.getAverageScore();
-        budget = budget - budget * 30 / 100;
+        budget = budget - budget * Constants.ELF_PERCENTAGE_CHANGE / Constants.MAX_PERCENTAGE;
         return budget;
     }
 }

@@ -1,5 +1,6 @@
 package children;
 
+import common.Constants;
 import elves.ChildVisitor;
 import enums.AgeGroup;
 import enums.Category;
@@ -25,7 +26,6 @@ public final class Child implements Comparable<Child>, Visitable {
     private List<Gift> receivedGifts = new ArrayList<>();
     private AgeGroup ageGroup = AgeGroup.UNKNOWN;
     private AverageScoreStrategy averageScoreStrategy = null;
-    //TODO use builder for niceScoreBonus
     private Double niceScoreBonus = 0.0;
     private ElvesType elf;
 
@@ -105,7 +105,7 @@ public final class Child implements Comparable<Child>, Visitable {
         return niceScoreBonus;
     }
 
-    public void setNiceScoreBonus(Double niceScoreBonus) {
+    public void setNiceScoreBonus(final Double niceScoreBonus) {
         this.niceScoreBonus = niceScoreBonus;
     }
 
@@ -113,7 +113,7 @@ public final class Child implements Comparable<Child>, Visitable {
         return elf;
     }
 
-    public void setElf(ElvesType elf) {
+    public void setElf(final ElvesType elf) {
         this.elf = elf;
     }
 
@@ -140,11 +140,16 @@ public final class Child implements Comparable<Child>, Visitable {
                 .createStrategy(ageGroup);
     }
 
+    /**
+     * Calls the average score strategy to get the child's score according to age
+     * group, then applies nice score bonus. Limits nice score maximum to 10.
+     * @return newly calculated average score field
+     */
     public Double getAverageScore() {
         averageScore = averageScoreStrategy.getAverageScore(this);
-        averageScore += averageScore * niceScoreBonus / 100;
-        if (averageScore > 10.0) {
-            averageScore = 10.0;
+        averageScore += averageScore * niceScoreBonus / Constants.MAX_PERCENTAGE;
+        if (averageScore > Constants.MAX_NICE_SCORE) {
+            averageScore = Constants.MAX_NICE_SCORE;
         }
         return averageScore;
     }
@@ -220,7 +225,7 @@ public final class Child implements Comparable<Child>, Visitable {
     }
 
     @Override
-    public Double accept(ChildVisitor visitor) {
+    public Double accept(final ChildVisitor visitor) {
         return visitor.visit(this);
     }
 }

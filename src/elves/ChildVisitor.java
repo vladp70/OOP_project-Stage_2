@@ -1,7 +1,6 @@
 package elves;
 
 import children.Child;
-import fileio.AnnualChildReport;
 
 public interface ChildVisitor {
     /**
@@ -11,5 +10,5 @@ public interface ChildVisitor {
      * to each elf's strategy or null if the elf was
      * not responsible for the given child
      */
-    Double visit(final Child child);
+    Double visit(Child child);
 }

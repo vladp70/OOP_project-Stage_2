@@ -13,7 +13,12 @@ import fileoutput.AnnualChildReport;
 import fileinput.Input;
 import gifts.Gift;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 public final class Database {
     private static Database instance = null;
@@ -95,7 +100,7 @@ public final class Database {
         Collections.sort(childrenList);
     }
 
-    public void setStrategy(CityStrategyEnum newStrategy) {
+    public void setStrategy(final CityStrategyEnum newStrategy) {
         strategy = newStrategy;
         giftingStrategy = GiftingStrategyFactory
                 .getInstance()
@@ -122,8 +127,15 @@ public final class Database {
         budgetUnit = santaBudget / averageSum;
     }
 
-    //TODO use boolean inStock
-    public Gift findCheapestInStockGiftByCategory(final Category category) {
+    /**
+     * Finds the gift with the smallest price in Santa's inventory
+     * from a specific category (in stock or independent of stock)
+     * @param category cheapest gift should be searched in
+     * @param inStock is true if stock should be taken in consideration
+     *                and false if found gift doesn't need to be in stock
+     * @return found gift or null if there is none available
+     */
+    public Gift findCheapestGiftByCategory(final Category category, final boolean inStock) {
         if (category == null) {
             return null;
         }
@@ -132,27 +144,7 @@ public final class Database {
 
         for (var gift : gifts) {
             if (gift.getCategory().equals(category)
-                    && gift.getQuantity() > 0) {
-                if (cheapestGift == null) {
-                    cheapestGift = gift;
-                } else if (cheapestGift.getPrice() > gift.getPrice()) {
-                    cheapestGift = gift;
-                }
-            }
-        }
-
-        return cheapestGift;
-    }
-
-    public Gift findCheapestGiftByCategory(final Category category) {
-        if (category == null) {
-            return null;
-        }
-
-        Gift cheapestGift = null;
-
-        for (var gift : gifts) {
-            if (gift.getCategory().equals(category)) {
+                    && (gift.getQuantity() > 0 || !inStock)) {
                 if (cheapestGift == null) {
                     cheapestGift = gift;
                 } else if (cheapestGift.getPrice() > gift.getPrice()) {
@@ -170,7 +162,7 @@ public final class Database {
                 return;
             }
 
-            Gift gift = findCheapestInStockGiftByCategory(preference);
+            Gift gift = findCheapestGiftByCategory(preference, true);
             if (gift == null) {
                 continue;
             }
@@ -191,6 +183,11 @@ public final class Database {
         return null;
     }
 
+    /**
+     * Calculates budget unit then each child's assigned budget (stored in a map)
+     * and sets in motion the actions of the white, pink and black elf that influence
+     * children's budgets
+     */
     public void calculateChildrenBudgets() {
         childrenBudgets.clear();
 

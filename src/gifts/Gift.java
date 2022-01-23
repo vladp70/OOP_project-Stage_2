@@ -36,7 +36,7 @@ public final class Gift {
         return quantity;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(final Integer quantity) {
         this.quantity = quantity;
     }
 
@@ -46,6 +46,7 @@ public final class Gift {
 
     @Override
     public String toString() {
-        return productName + '(' + price + ", " + category + ')';
+        return productName
+                + '(' + price + ", " + category + ", stock: " + quantity + ')';
     }
 }

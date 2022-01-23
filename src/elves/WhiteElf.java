@@ -2,18 +2,17 @@ package elves;
 
 import children.Child;
 import enums.ElvesType;
-import fileio.AnnualChildReport;
 import santareplacer.Database;
 
-public class WhiteElf implements ChildVisitor{
+public final class WhiteElf implements ChildVisitor {
     private Database santaDB;
 
-    public WhiteElf(Database santaDB) {
+    public WhiteElf(final Database santaDB) {
         this.santaDB = santaDB;
     }
 
     @Override
-    public Double visit(Child child) {
+    public Double visit(final Child child) {
         if (!(child.getElf().equals(ElvesType.WHITE))) {
             return null;
         }

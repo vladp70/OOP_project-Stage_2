@@ -2,7 +2,7 @@ package santareplacer;
 
 import enums.CityStrategyEnum;
 
-public class GiftingStrategyFactory {
+public final class GiftingStrategyFactory {
     private static GiftingStrategyFactory instance = null;
 
     private GiftingStrategyFactory() {

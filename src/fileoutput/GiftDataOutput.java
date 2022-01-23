@@ -3,12 +3,12 @@ package fileoutput;
 import enums.Category;
 import gifts.Gift;
 
-public class GiftDataOutput {
+public final class GiftDataOutput {
     private String productName;
     private Double price;
     private Category category;
 
-    public GiftDataOutput(Gift gift) {
+    public GiftDataOutput(final Gift gift) {
         this.productName = gift.getProductName();
         this.price = gift.getPrice();
         this.category = gift.getCategory();
