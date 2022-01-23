@@ -256,7 +256,7 @@ public final class Database {
     /**
      * If the round index is valid and not 0 (when the annual changes stage is skipped),
      * the budget unit is calculated and every child receives the gifts Santa can provide
-     * based on their preferences
+     * based on their preferences and the elves' effects
      * @param round index starting from 0 (initial round)
      * @return the generated annual report of the children states
      */
